@@ -59,7 +59,8 @@ def get_paper_ecg(input_file,header_file,output_directory, seed, add_dc_pulse,ad
         else:
             full_mode = full_mode
         if(columns==-1):
-            columns = 4
+            # use two columns for twelve-lead ECGs
+            columns = 2
     else:
         gen_m = len(full_leads)
         columns = 4
