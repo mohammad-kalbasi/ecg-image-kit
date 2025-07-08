@@ -218,8 +218,10 @@ def ecg_plot(
     dc_offset = 0
     if(show_dc_pulse):
         dc_offset = sample_rate*standard_values['dc_offset_length']*step
-    #Iterate through each lead in lead_index array.
-    y_offset = (row_height/2)
+    #Iterate through each lead in lead_index array. Randomise top margin so that
+    #the complete ECG grid can start at slightly different vertical offsets
+    top_rand = random.uniform(0, row_height/2)
+    y_offset = (row_height/2) + top_rand
     x_offset = 0
 
     leads_ds = []
