@@ -21,6 +21,9 @@ def get_paper_ecg(input_file,header_file,output_directory, seed, add_dc_pulse,ad
     # Ignore any requested long-lead mode and always omit the bottom rhythm strip
     full_mode = 'None'
 
+    # Ignore any requested long-lead mode and always omit the bottom rhythm strip
+    full_mode = 'None'
+
     # Extract a reduced-lead set from each pair of full-lead header and recording files.
     full_header_file = header_file
     full_recording_file = input_file

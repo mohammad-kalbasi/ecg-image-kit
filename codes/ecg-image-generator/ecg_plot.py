@@ -216,6 +216,11 @@ def ecg_plot(
         dc_offset = sample_rate*standard_values['dc_offset_length']*step
     #Iterate through each lead in lead_index array. Randomise top margin so that
     #the complete ECG grid can start at slightly different vertical offsets
+    # Start the first row slightly above the page bottom and add a small random
+    # vertical offset so each generated image begins at a different height. The
+    # offset is chosen so the last row always fits within the page bounds.
+    top_rand = random.uniform(0, row_height / 2)
+    y_offset = top_rand - (row_height / 2)
     top_rand = random.uniform(0, row_height/2)
     y_offset = (row_height/2) + top_rand
     x_offset = 0
@@ -233,7 +238,7 @@ def ecg_plot(
             leadName = leadNames_12[i]
         else:
             leadName = lead_index[i]
-        #y_offset is computed by shifting by a certain offset based on i, and also by row_height/2 to account for half the waveform below the axis
+        # Move down one row whenever starting a new column block.
         if(i%columns==0):
 
             y_offset += row_height
