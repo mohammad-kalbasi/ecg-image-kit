@@ -153,6 +153,7 @@ def ecg_plot(
     # this slack to keep the layout varied while ensuring the last row fits
     # on the page.
     row_height = (height * y_grid_size / y_grid) / (rows + 1)
+
     x_max = width * x_grid_size / x_grid
     x_min = 0
     x_gap = np.floor(((x_max - (columns*secs))/2)/0.2)*0.2
@@ -223,6 +224,9 @@ def ecg_plot(
     # The first row will start between half and a full extra row from the top.
     top_rand = random.uniform(row_height * 0.5, row_height)
     y_offset = y_max - row_height / 2 - top_rand
+
+
+
     x_offset = 0
 
     leads_ds = []
@@ -237,7 +241,7 @@ def ecg_plot(
         # Move down one row whenever starting a new column block.
         if(i%columns==0 and i>0):
             y_offset -= row_height
-        
+
         #x_offset will be distance by which we shift the plot in each iteration
         if(columns>1):
             x_offset = (i%columns)*secs
