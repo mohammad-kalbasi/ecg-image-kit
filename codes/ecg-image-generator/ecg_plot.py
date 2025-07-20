@@ -148,8 +148,11 @@ def ecg_plot(
     y_grid_dots = y_grid*resolution
     x_grid_dots = x_grid*resolution
  
-    # Use all available vertical space for the plotted rows
-    row_height = (height * y_grid_size/y_grid)/rows
+    # Leave roughly half a row of slack vertically so we can jitter the
+    # starting position without losing the final row off the page.  The
+    # random offset is limited to half this slack row.
+    row_height = (height * y_grid_size / y_grid) / (rows + 0.5)
+
     x_max = width * x_grid_size / x_grid
     x_min = 0
     x_gap = np.floor(((x_max - (columns*secs))/2)/0.2)*0.2
@@ -215,6 +218,7 @@ def ecg_plot(
     if(show_dc_pulse):
         dc_offset = sample_rate*standard_values['dc_offset_length']*step
 
+
     #Iterate through each lead in lead_index array. Randomise top margin so that
     #the complete ECG grid can start at slightly different vertical offsets
     # Start the first row slightly above the page bottom and add a small random
@@ -228,12 +232,12 @@ def ecg_plot(
 
     leads_ds = []
 
-    leadNames_12 = configs['leadNames_12']
     tickLength = configs['tickLength']
     tickSize_step = configs['tickSize_step']
 
     for i in np.arange(len(lead_index)):
         current_lead_ds = dict()
+
 
         if len(lead_index) == 12:
             leadName = leadNames_12[i]

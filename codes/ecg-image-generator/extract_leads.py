@@ -27,6 +27,9 @@ def get_paper_ecg(input_file,header_file,output_directory, seed, add_dc_pulse,ad
     # Ignore any requested long-lead mode and always omit the bottom rhythm strip
     full_mode = 'None'
 
+    # Ignore any requested long-lead mode and always omit the bottom rhythm strip
+    full_mode = 'None'
+
     # Extract a reduced-lead set from each pair of full-lead header and recording files.
     full_header_file = header_file
     full_recording_file = input_file
@@ -54,10 +57,12 @@ def get_paper_ecg(input_file,header_file,output_directory, seed, add_dc_pulse,ad
     adc = get_adc_gains(full_header,full_leads)
     
     full_leads = standardize_leads(full_leads)
+    plot_order = list(full_leads)
 
     if(len(full_leads)==2):
         full_mode = 'None'
         gen_m = 2
+        plot_order = list(full_leads)
         if(columns==-1):
             columns = 1
             
@@ -68,8 +73,15 @@ def get_paper_ecg(input_file,header_file,output_directory, seed, add_dc_pulse,ad
         if(columns==-1):
             # use two columns for twelve-lead ECGs
             columns = 2
+        # arrange plotting order to keep limb leads paired with precordial leads
+        plot_order = configs.get(
+            'leadNames_12',
+            ["I", "V1", "II", "V2", "III", "V3", "aVR", "V4", "aVL", "V5", "aVF", "V6"],
+        )
+
     else:
         gen_m = len(full_leads)
+        plot_order = list(full_leads)
         columns = 4
         full_mode = 'None'
 
@@ -275,6 +287,7 @@ def get_paper_ecg(input_file,header_file,output_directory, seed, add_dc_pulse,ad
         if ecg_frame[i] == {}:
             continue
 
+        x_grid,y_grid = ecg_plot(ecg_frame[i], configs=configs, full_header_file=full_header_file, style=grid_colour, sample_rate = rate,columns=columns,rec_file_name = rec_file, output_dir = output_directory, resolution = resolution, pad_inches = pad_inches, lead_index=plot_order, full_mode = 'None', store_text_bbox = store_text_bbox, show_lead_name=add_lead_names,show_dc_pulse=dc,papersize=papersize,show_grid=(grid),standard_colours=standard_colours,bbox=bbox, print_txt=print_txt, json_dict=json_dict, start_index=start, store_configs=store_configs, lead_length_in_seconds=lead_length_in_seconds)
         x_grid,y_grid = ecg_plot(ecg_frame[i], configs=configs, full_header_file=full_header_file, style=grid_colour, sample_rate = rate,columns=columns,rec_file_name = rec_file, output_dir = output_directory, resolution = resolution, pad_inches = pad_inches, lead_index=full_leads, full_mode = 'None', store_text_bbox = store_text_bbox, show_lead_name=add_lead_names,show_dc_pulse=dc,papersize=papersize,show_grid=(grid),standard_colours=standard_colours,bbox=bbox, print_txt=print_txt, json_dict=json_dict, start_index=start, store_configs=store_configs, lead_length_in_seconds=lead_length_in_seconds)
 
         rec_head, rec_tail = os.path.split(rec_file)
