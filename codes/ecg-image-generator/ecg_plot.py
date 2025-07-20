@@ -221,6 +221,8 @@ def ecg_plot(
     # offset is chosen so the last row always fits within the page bounds.
     top_rand = random.uniform(0, row_height / 2)
     y_offset = top_rand - (row_height / 2)
+    top_rand = random.uniform(0, row_height/2)
+    y_offset = (row_height/2) + top_rand
     x_offset = 0
 
     leads_ds = []
