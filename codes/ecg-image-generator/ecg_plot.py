@@ -152,6 +152,7 @@ def ecg_plot(
     # starting position without losing the final row off the page.  The
     # random offset is limited to half this slack row.
     row_height = (height * y_grid_size / y_grid) / (rows + 0.5)
+
     x_max = width * x_grid_size / x_grid
     x_min = 0
     x_gap = np.floor(((x_max - (columns*secs))/2)/0.2)*0.2
@@ -216,11 +217,17 @@ def ecg_plot(
     dc_offset = 0
     if(show_dc_pulse):
         dc_offset = sample_rate*standard_values['dc_offset_length']*step
-    # Iterate through each lead in ``lead_index``.  The ECG rows are plotted
-    # from top to bottom.  ``top_rand`` randomises the vertical offset so the
-    # layout varies slightly while ensuring the last row stays on the page.
-    top_rand = random.uniform(0, row_height * 0.5)
-    y_offset = y_max - row_height / 2 - top_rand
+
+
+    #Iterate through each lead in lead_index array. Randomise top margin so that
+    #the complete ECG grid can start at slightly different vertical offsets
+    # Start the first row slightly above the page bottom and add a small random
+    # vertical offset so each generated image begins at a different height. The
+    # offset is chosen so the last row always fits within the page bounds.
+    top_rand = random.uniform(0, row_height / 2)
+    y_offset = top_rand - (row_height / 2)
+    top_rand = random.uniform(0, row_height/2)
+    y_offset = (row_height/2) + top_rand
     x_offset = 0
 
     leads_ds = []
@@ -231,10 +238,16 @@ def ecg_plot(
     for i in np.arange(len(lead_index)):
         current_lead_ds = dict()
 
-        leadName = lead_index[i]
+
+        if len(lead_index) == 12:
+            leadName = leadNames_12[i]
+        else:
+            leadName = lead_index[i]
         # Move down one row whenever starting a new column block.
-        if(i%columns==0 and i>0):
-            y_offset -= row_height
+
+        if(i%columns==0):
+
+            y_offset += row_height
         
         #x_offset will be distance by which we shift the plot in each iteration
         if(columns>1):
