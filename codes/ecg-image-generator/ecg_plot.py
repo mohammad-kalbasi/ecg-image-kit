@@ -123,10 +123,6 @@ def ecg_plot(
     leads = len(lead_index)
 
     rows  = int(ceil(leads/columns))
-
-    if(full_mode!='None'):
-        rows+=1
-        leads+=1
     
     #Grid calibration
     #Each big grid corresponds to 0.2 seconds and 0.5 mV
@@ -152,8 +148,8 @@ def ecg_plot(
     y_grid_dots = y_grid*resolution
     x_grid_dots = x_grid*resolution
  
-    #row_height = height * y_grid_size/(y_grid*(rows+2))
-    row_height = (height * y_grid_size/y_grid)/(rows+2)
+    # Use all available vertical space for the plotted rows
+    row_height = (height * y_grid_size/y_grid)/rows
     x_max = width * x_grid_size / x_grid
     x_min = 0
     x_gap = np.floor(((x_max - (columns*secs))/2)/0.2)*0.2

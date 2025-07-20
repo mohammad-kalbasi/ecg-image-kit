@@ -310,13 +310,31 @@ def convert_inches_to_volts(inches):
 def convert_inches_to_seconds(inches):
     return float(inches*1.016)
 
-def write_wfdb_file(ecg_frame, filename, rate, header_file, write_dir, full_mode, mask_unplotted_samples):
+def write_wfdb_file(ecg_frame, filename, rate, header_file, write_dir, mask_unplotted_samples):
+    """Write a WFDB file from a dictionary of leads.
+
+    Parameters
+    ----------
+    ecg_frame : dict
+        Dictionary mapping lead names to numpy arrays of samples.
+    filename : str
+        Path of the resulting WFDB record (without extension).
+    rate : int
+        Sampling frequency in Hz.
+    header_file : str
+        Path to the original WFDB header file for reference metadata.
+    write_dir : str
+        Directory to write the WFDB record.
+    mask_unplotted_samples : bool
+        Whether the signal may contain NaNs for unplotted regions.
+    """
+
     full_header = load_header(header_file)
     full_leads = get_leads(full_header)
     full_leads = standardize_leads(full_leads)
 
-    lead_step = 10.0
-    samples = len(ecg_frame[full_mode])
+    # assume all leads have the same length
+    samples = len(ecg_frame[full_leads[0]])
     array = np.zeros((1, samples))
 
     leads = []
@@ -325,8 +343,6 @@ def write_wfdb_file(ecg_frame, filename, rate, header_file, write_dir, full_mode
 
     for i, lead in enumerate(full_leads):
         leads.append(lead)
-        if lead == full_mode:
-            lead = 'full' + lead
         adc_gn = header.adc_gain[i]
 
         arr = ecg_frame[lead]
