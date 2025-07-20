@@ -53,7 +53,6 @@
     "number_of_columns_in_image": 0,
     "resolution": 0,
     "pad_inches": 0,
-    "full_mode_lead": "",
     "handwritten_text": false,
     "num_words": 0,
     "x_offset_for_handwritten_text": 0,
